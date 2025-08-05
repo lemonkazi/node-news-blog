@@ -1,4 +1,5 @@
 const Article = require('../models/Article');
+const UserPreference = require('../models/UserPreference');
 const { Op } = require('sequelize');
 
 const createArticle = async (req, res) => {
@@ -67,5 +68,28 @@ const getArticleById = async (req, res) => {
     res.status(500).json({ error: err.message });
   }
 };
+// Add this controller:
+const getPersonalizedFeed = async (req, res) => {
+  try {
+    const pref = await UserPreference.findOne({ where: { userId: req.user.id } });
+    if (!pref) return res.status(200).json({ data: [] });
 
-module.exports = { createArticle, getArticles, getArticleById };
+    const { sources = [], categories = [], authors = [] } = pref;
+
+    const where = {};
+    if (sources.length) where.source = { [Op.in]: sources };
+    if (categories.length) where.category = { [Op.in]: categories };
+    if (authors.length) where.author = { [Op.in]: authors };
+
+    const articles = await Article.findAll({
+      where,
+      order: [['publishedAt', 'DESC']],
+      limit: 20,
+    });
+
+    res.json({ data: articles });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+};
+module.exports = { createArticle, getArticles, getArticleById, getPersonalizedFeed };
