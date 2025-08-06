@@ -1,45 +1,43 @@
-const bcrypt = require('bcryptjs');
-const jwt = require('jsonwebtoken');
-const User = require('../models/User');
+const UserService = require('../services/user/UserService');
+const UserDao = require('../daos/user/UserDao');
+const service = new UserService(new UserDao());
 
 const register = async (req, res) => {
   try {
-    
-    const { name, email, password } = req.body;
-
-    const exists = await User.findOne({ where: { email } });
-    if (exists) return res.status(400).json({ message: 'Email already exists' });
-
-    const hashed = await bcrypt.hash(password, 10);
-    const user = await User.create({ name, email, password: hashed });
-
-    res.status(201).json({ message: 'User registered', user: { id: user.id, name: user.name, email: user.email } });
+    const user = await service.register(req.body);
+    res.status(201).json({ message: 'Registered', user });
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    res.status(400).json({ error: err.message });
   }
 };
 
 const login = async (req, res) => {
   try {
-    const { email, password } = req.body;
-    const user = await User.findOne({ where: { email } });
-
-    if (!user) return res.status(404).json({ message: 'User not found' });
-
-    const isMatch = await bcrypt.compare(password, user.password);
-    if (!isMatch) return res.status(400).json({ message: 'Invalid credentials' });
-
-    const token = jwt.sign({ id: user.id }, process.env.JWT_SECRET, { expiresIn: '1d' });
-
+    const { user, token } = await service.login(req.body);
     res.json({ token, user: { id: user.id, name: user.name, email: user.email } });
   } catch (err) {
-    res.status(500).json({ error: err.message });
+    res.status(401).json({ error: err.message });
   }
 };
 
-const logout = (req, res) => {
-  // Since we're using JWT statelessly, logout is handled on client by discarding token
-  res.json({ message: 'Logged out (discard token on client)' });
+const logout = async (req, res) => {
+  try {
+    const { refreshToken } = req.body;
+    await service.logout(refreshToken);
+    res.json({ message: 'Logged out' });
+  } catch (err) {
+    res.status(400).json({ error: err.message });
+  }
 };
 
-module.exports = { register, login, logout };
+const refreshToken = async (req, res) => {
+  try {
+    const { refreshToken } = req.body;
+    const accessToken = await service.refresh(refreshToken);
+    res.json({ accessToken });
+  } catch (err) {
+    res.status(401).json({ error: err.message });
+  }
+};
+
+module.exports = { register, login, logout, refreshToken };

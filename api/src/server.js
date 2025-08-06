@@ -20,6 +20,7 @@ app.use((req, res, next) => {
 
 // Sync DB
 const Article = require('./models/Article'); // import this too
+const RefreshToken = require('./models/RefreshToken');
 sequelize.sync({ alter: true }) // optional: auto-sync
 
 sequelize.sync()
@@ -56,6 +57,11 @@ app.get('/fetch-test', async (req, res) => {
     res.status(500).send({ error: 'Failed to fetch news' });
   }
 });
+
+const swaggerUI = require('swagger-ui-express');
+const swaggerSpec = require('./docs/swagger');
+
+app.use('/api-docs', swaggerUI.serve, swaggerUI.setup(swaggerSpec));
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
