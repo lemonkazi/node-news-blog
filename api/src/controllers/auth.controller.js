@@ -13,8 +13,8 @@ const register = async (req, res) => {
 
 const login = async (req, res) => {
   try {
-    const { user, token } = await service.login(req.body);
-    res.json({ token, user: { id: user.id, name: user.name, email: user.email } });
+    const { user, accessToken, refreshToken } = await service.login(req.body);
+    res.json({ accessToken, refreshToken, user: { id: user.id, name: user.name, email: user.email } });
   } catch (err) {
     res.status(401).json({ error: err.message });
   }

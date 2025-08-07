@@ -8,7 +8,7 @@ class ArticleDao extends BaseDao {
   }
 
   async findAllWithFilters(filter = {}) {
-    const { page = 1, limit = 10, search, ...rest } = filter;
+    const { page = 1, limit = 10, search, category, source, fromDate, toDate, ...rest } = filter;
     if (Object.keys(rest).length > 0) {
       console.warn('Unused filter keys detected:', rest);
     }

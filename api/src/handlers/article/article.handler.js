@@ -1,4 +1,5 @@
 const BaseHandler = require('../BaseHandler');
+const { Op } = require('sequelize');
 const ArticleService = require('../../services/article/ArticleService');
 const ArticleDao = require('../../daos/article/ArticleDao');
 

@@ -68,5 +68,27 @@ router.post('/login', login);
  *         description: User logged out
  */
 router.post('/logout', logout); // Optional
+/**
+ * @swagger
+ * /api/auth/refresh:
+ *   post:
+ *     summary: Refresh access token
+ *     tags: [Auth]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required: [refreshToken]
+ *             properties:
+ *               refreshToken:
+ *                 type: string
+ *     responses:
+ *       200:
+ *         description: New access token
+ *       401:
+ *         description: Invalid refresh token
+ */
 router.post('/refresh', refreshToken);
 module.exports = router;

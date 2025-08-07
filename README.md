@@ -38,7 +38,7 @@ A RESTful API for a news aggregator service. Built using Node.js, Express, MySQL
 ```bash
 git clone
 cp .env.example .env
-# update NEWS_API_KEY and JWT_SECRET in .env
+# update NEWS_API_KEY and JWT_ACCESS_SECRET in .env
 docker-compose up --build
 
 ```
