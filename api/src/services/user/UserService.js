@@ -2,6 +2,7 @@ const BaseService = require('../../services/BaseService');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const RefreshToken = require('../../models/RefreshToken');
+const ms = require('ms');
 
 
 class UserService extends BaseService {
