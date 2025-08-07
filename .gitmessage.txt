@@ -1,0 +1,9 @@
+feat/fix(api,docker): fix API error and update container name
+
+This commit adds the api feature to the application. It includes the
+following changes:
+- Fix some docker issue
+
+Related Issue: #123
+
+Signed-off-by: Mamun <lemonpstu09@gmail.com>

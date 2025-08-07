@@ -53,3 +53,11 @@ You're ready to go! register with api: http://localhost:5000/api/auth/register
   "email": "lemon@example.com",
   "password": "password123"
 }
+
+## Commit Message Template
+
+To help keep our commit messages consistent, please run this after cloning:
+
+    git config commit.template .gitmessage.txt
+
+Now, every time you commit, Git will prompt you with our standard template.
