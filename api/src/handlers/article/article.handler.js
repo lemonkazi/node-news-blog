@@ -11,6 +11,15 @@ class ArticleHandler extends BaseHandler {
     this.getFeed = this.getFeed.bind(this);
   }
 
+  async getAll(req, res) {
+    try {
+      const data = await this.service.findAll(req.query);
+      res.status(200).json({ data });
+    } catch (err) {
+      res.status(500).json({ error: err.message });
+    }
+  }
+
   async getFeed(req, res) {
     try {
       const pref = await req.user.getUserPreference(); // assuming association exists
